@@ -3,12 +3,14 @@ package uniandes.dpoo.hamburguesas.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import uniandes.dpoo.hamburguesas.excepciones.HamburguesaException;
 import uniandes.dpoo.hamburguesas.excepciones.NoHayPedidoEnCursoException;
 import uniandes.dpoo.hamburguesas.excepciones.YaHayUnPedidoEnCursoException;
 import uniandes.dpoo.hamburguesas.mundo.Combo;
@@ -123,9 +125,27 @@ public class RestauranteTest {
 	}
 	
 	@Test 
-	void testCargarInformacionRestaurante()
+	void testCargarInformacionRestaurante() throws Exception
 	{
-		
+		File archivoIngredientes = new File("./data/ingredientes.txt");
+	    File archivoMenu = new File("./data/menu.txt");
+	    File archivoCombos = new File("./data/combos.txt");
+
+	    restaurante.cargarInformacionRestaurante(archivoIngredientes, archivoMenu, archivoCombos);
+	    
+	    ArrayList<Ingrediente> ingredientes = restaurante.getIngredientes();
+	    assertFalse(ingredientes.isEmpty(), "Los ingredientes no fueron cargados");
+	    assertEquals("lechuga", ingredientes.get(0).getNombre(), "Los ingredientes no fueron cargados correctamente");
+	    assertEquals(1000, ingredientes.get(0).getCostoAdicional(), "Los ingredientes no fueron cargados correctamente");
+	    
+	    ArrayList<ProductoMenu> menu = restaurante.getMenuBase();
+	    assertFalse(menu.isEmpty(), "El menú no fue cargado");
+	    assertEquals("corral", menu.get(0).getNombre(), "El menu no se cargo correctamente");
+	    assertEquals(14000, menu.get(0).getPrecio(), "El menu no se cargo correctamente");
+	    
+	    ArrayList<Combo> combos = restaurante.getMenuCombos();
+	    assertFalse(combos.isEmpty(), "Los combos no fueron cargados");
+	    assertEquals("combo corral", combos.get(0).getNombre(), "El primer combo no es 'combo corral'");
 	}
 	
 
